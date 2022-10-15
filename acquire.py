@@ -18,7 +18,9 @@ def get_blog_urls(base_url, header={'User-Agent': "Codeup Data Science"}):
     Returns:
         list: list of blog urls
     """
-    soup = soupify(get(base_url, headers=header, features='lxml').content)    
+    soup = soupify(
+                    get(base_url, headers=header).content,
+                    features='lxml')    
 
     return [link['href'] for link in soup.select('a.more-link')]
 
@@ -45,13 +47,14 @@ def get_blog_content(base_url='https://codeup.com/blog/', header={'User-Agent': 
     for blog in blog_links:
         blog_soup = soupify(
             get(blog, 
-            headers=header,features='lxml').content)
+            headers=header).content,
+            features='lxml')
 
         all_blogs.append(
                     {'title': blog_soup.select_one('h1.entry-title').text,
-                    'content': blog_soup.select_one('div.entry-content').text.strip()})
+                    'content(original)': blog_soup.select_one('div.entry-content').text.strip()})
 
-    return all_blogs
+    return pd.DataFrame(all_blogs)
 
 def get_news_articles(fresh=False, base_url='https://inshorts.com/en/read'):
     """ 
@@ -63,7 +66,7 @@ def get_news_articles(fresh=False, base_url='https://inshorts.com/en/read'):
         base_url:
     ---
     Returns:
-        
+
     """
     if fresh == False:
         all_articles = pd.read_csv('news_articles.csv')
@@ -82,7 +85,7 @@ def get_news_articles(fresh=False, base_url='https://inshorts.com/en/read'):
                     .find_all('div', itemprop='articleBody')]
         articles = [{'title': title, 
                         'category': category,
-                        'body': body} for title, body in zip(
+                        'body(original)': body} for title, body in zip(
                             titles, bodies
                         )]
         all_articles.extend(articles)
