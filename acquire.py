@@ -52,7 +52,7 @@ def get_blog_content(base_url='https://codeup.com/blog/', header={'User-Agent': 
 
         all_blogs.append(
                     {'title': blog_soup.select_one('h1.entry-title').text,
-                    'content(original)': blog_soup.select_one('div.entry-content').text.strip()})
+                    'original': blog_soup.select_one('div.entry-content').text.strip()})
 
     return pd.DataFrame(all_blogs)
 
@@ -85,7 +85,7 @@ def get_news_articles(fresh=False, base_url='https://inshorts.com/en/read'):
                     .find_all('div', itemprop='articleBody')]
         articles = [{'title': title, 
                         'category': category,
-                        'body(original)': body} for title, body in zip(
+                        'original': body} for title, body in zip(
                             titles, bodies
                         )]
         all_articles.extend(articles)

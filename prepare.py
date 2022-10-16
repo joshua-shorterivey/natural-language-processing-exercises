@@ -12,6 +12,7 @@ import numpy as np
 import re
 import unicodedata
 
+
 def basic_clean(text):
     """ 
     Purpose:
@@ -142,3 +143,20 @@ def clean(text, extra_words=None, exclude_words=None):
     text = remove_stopwords(text, extra_words, exclude_words)
 
     return text
+
+def prep_text(df):
+    """ 
+    Purpose:
+        
+    ---
+    Parameters:
+        
+    ---
+    Returns:
+    
+    """
+    df['clean'] = df.original.apply(clean)
+    df['stemmed'] = df.clean.apply(stem)
+    df['lemmatized'] = df.clean.apply(lemmatize)
+
+    return df
